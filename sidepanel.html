@@ -1,0 +1,39 @@
+<!-- sidepanel.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Live Transcriber</h1>
+    <div class="controls">
+      <button id="btnStart" class="btn primary">Start</button>
+      <button id="btnStop" class="btn danger" disabled>Stop</button>
+      <button id="btnClear" class="btn secondary">Clear</button>
+    </div>
+  </div>
+  
+  <div class="stats">
+    <span id="wordCount">0 words</span>
+    <span id="duration">00:00:00</span>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search transcript...">
+  </div>
+
+  <div id="transcriptArea" class="transcript-area">
+    <p class="placeholder">Transcript will appear here...</p>
+  </div>
+
+  <div class="footer">
+    <button id="btnCopy" class="btn secondary">Copy</button>
+    <button id="btnExport" class="btn secondary">Export TXT</button>
+    <button id="btnHistory" class="btn secondary">History</button>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

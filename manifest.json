@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Live Tab Transcriber",
+  "version": "1.0.0",
+  "description": "Capture tab audio and transcribe it in real-time with high accuracy.",
+  "permissions": [
+    "tabCapture",
+    "offscreen",
+    "storage",
+    "sidePanel",
+    "activeTab",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "options_page": "settings.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

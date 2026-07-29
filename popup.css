@@ -1,0 +1,7 @@
+/* popup.css */
+body { width: 220px; padding: 15px; font-family: sans-serif; background: #f9f9f9; }
+h2 { margin: 0 0 15px 0; font-size: 1.2em; text-align: center; }
+button { width: 100%; padding: 10px; margin-bottom: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; background: #007bff; color: white; }
+button:hover { background: #0056b3; }
+button.secondary { background: #e2e6ea; color: #333; }
+button.secondary:hover { background: #d3d9df; }
