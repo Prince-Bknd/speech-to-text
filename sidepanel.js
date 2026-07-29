@@ -27,13 +27,13 @@ chrome.storage.local.get(['currentTranscript', 'darkMode']).then((data) => {
 });
 
 btnSummarize.addEventListener('click', async () => {
-  if (!currentText || currentText.trim().length < 100) {
+  if (!currentText || currentText.trim().length < 50) {
     alert('Not enough text to summarize. Please transcribe a bit more first!');
     return;
   }
   
   summaryArea.style.display = 'block';
-  summaryArea.innerHTML = '<span class="summary-loading">🤖 AI is summarizing... (this takes ~2 seconds)</span>';
+  summaryArea.innerHTML = '<span class="summary-loading">🤖 Generating short summary...</span>';
   
   const settings = await chrome.storage.local.get(['apiKey']);
   const apiKey = settings.apiKey || "..";
@@ -51,35 +51,34 @@ btnSummarize.addEventListener('click', async () => {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini", // Ultra-fast and extremely cheap (~$0.0001 per summary)
+        model: "gpt-4o-mini", 
         messages: [
           { 
             role: "system", 
-            content: "You are a helpful assistant. Provide a highly concise, bullet-point summary of the following transcript. Highlight only the key points, main ideas, and actionable takeaways. Keep it under 150 words." 
+            content: "Provide a very short, concise, 1 to 2 sentence summary of this transcript. Just state the core message or main takeaway. Do not use bullet points. Keep it under 10-40 words." 
           },
           { 
             role: "user", 
             content: currentText 
           }
         ],
-        max_tokens: 300
+        max_tokens: 100 
       })
     });
 
     if (!response.ok) {
       const errText = await response.text();
-      throw new Error(`API Error: ${response.status} - ${errText}`);
+      throw new Error(`API Error: ${response.status}`);
     }
 
     const data = await response.json();
     const summary = data.choices[0].message.content;
     
-    // Display the formatted summary
-    summaryArea.innerHTML = `<strong>📝 AI Summary:</strong><br><br>${summary.replace(/\n/g, '<br>')}`;
+    summaryArea.innerHTML = `<strong>💡 Quick Summary:</strong><br>${summary}`;
     
   } catch (err) {
     console.error('Summarization error:', err);
-    summaryArea.innerHTML = `<span style="color:red;">❌ Failed to summarize: ${err.message}</span>`;
+    summaryArea.innerHTML = `<span style="color:red;">❌ Failed to summarize.</span>`;
   }
 });
 
