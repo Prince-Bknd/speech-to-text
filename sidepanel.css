@@ -19,3 +19,36 @@ body.dark .transcript-area { background: #2d2d2d; border-color: #444; }
 .footer { display: flex; justify-content: space-between; }
 .footer button { flex: 1; margin: 0 4px; }
 mark { background: #ffeb3b; padding: 0 2px; border-radius: 3px; color: #000; }
+/* Add this to the bottom of your existing sidepanel.css */
+
+.summary-area { 
+  background: #f0f9ff; 
+  border: 1px solid #bae6fd; 
+  border-radius: 8px; 
+  padding: 15px; 
+  margin-bottom: 15px; 
+  font-size: 0.95em; 
+  line-height: 1.6; 
+  color: #0c4a6e; 
+  white-space: pre-wrap;
+  animation: fadeIn 0.3s ease-in;
+}
+
+body.dark .summary-area { 
+  background: #1e293b; 
+  border-color: #334155; 
+  color: #e2e8f0; 
+}
+
+.summary-loading {
+  color: #64748b;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

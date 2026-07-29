@@ -30,7 +30,7 @@ saveBtn.addEventListener('click', () => {
 // const status = document.getElementById('status');
 
 // // Hardcoded API key
-// const HARDCODED_API_KEY = "";
+// const HARDCODED_API_KEY = "..";
 
 // // Load saved settings when the page opens
 // chrome.storage.local.get(['apiKey', 'language', 'darkMode']).then((data) => {
