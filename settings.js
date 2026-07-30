@@ -54,3 +54,24 @@ saveBtn.addEventListener('click', () => {
     setTimeout(() => status.textContent = '', 2000);
   });
 });
+
+chrome.storage.local.get(['apiFormat', 'baseUrl', 'apiKey', 'modelName', 'language', 'darkMode']).then((data) => {
+  if (data.apiFormat) apiFormatSelect.value = data.apiFormat;
+  if (data.baseUrl) baseUrlInput.value = data.baseUrl;
+  if (data.apiKey) apiKeyInput.value = data.apiKey;
+  if (data.modelName) modelNameInput.value = data.modelName;
+  if (data.language) langSelect.value = data.language;
+  
+  if (data.darkMode) {
+    darkModeInput.checked = true;
+    document.body.classList.add('dark');
+  }
+});
+
+darkModeInput.addEventListener('change', (e) => {
+  if (e.target.checked) {
+    document.body.classList.add('dark');
+  } else {
+    document.body.classList.remove('dark');
+  }
+});
