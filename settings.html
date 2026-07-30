@@ -5,52 +5,104 @@
   <link rel="stylesheet" href="settings.css">
 </head>
 <body>
-  <h1>AI Settings</h1>
-  
-  <label>Quick Preset (Auto-fills fields)</label>
-  <select id="presetSelect">
-    <option value="custom">Custom / Manual</option>
-    <option value="openai">OpenAI (GPT)</option>
-    <option value="groq">Groq (Fast & Free Tier)</option>
-    <option value="deepseek">DeepSeek</option>
-    <option value="mistral">Mistral AI</option>
-    <option value="together">Together AI</option>
-    <option value="ollama">Ollama (Local/Free)</option>
-    <option value="anthropic">Anthropic (Claude)</option>
-    <option value="google">Google (Gemini)</option>
-  </select>
+  <div class="settings-container">
+    <h1>AI Settings</h1>
+    
+    <form id="settingsForm" class="form-grid">
+      
+      <div class="form-group">
+        <label for="presetSelect">Quick Preset <span class="required">*</span></label>
+        <select id="presetSelect" class="modern-select" required>
+          <option value="custom">Custom / Manual</option>
+          <option value="openai">OpenAI (GPT)</option>
+          <option value="groq">Groq (Fast & Free)</option>
+          <option value="deepseek">DeepSeek</option>
+          <option value="mistral">Mistral AI</option>
+          <option value="together">Together AI</option>
+          <option value="ollama">Ollama (Local)</option>
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="google">Google (Gemini)</option>
+        </select>
+        <p class="helper-text">Auto-fills URL, format & models.</p>
+      </div>
 
-  <label>API Format</label>
-  <select id="apiFormat">
-    <option value="openai">OpenAI Compatible (Works with 90% of AIs)</option>
-    <option value="anthropic">Anthropic (Claude)</option>
-    <option value="google">Google (Gemini)</option>
-  </select>
+      <div class="form-group">
+        <label for="apiFormat">API Format <span class="required">*</span></label>
+        <select id="apiFormat" class="modern-select" required>
+          <option value="openai">OpenAI Compatible</option>
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="google">Google (Gemini)</option>
+        </select>
+        <p class="helper-text">The API structure to use.</p>
+      </div>
 
-  <label>Base URL</label>
-  <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+      <div class="form-group">
+        <label for="baseUrl">Base URL <span class="required">*</span></label>
+        <input type="url" id="baseUrl" list="urlSuggestions" placeholder="https://api.openai.com/v1" class="modern-input" required>
+        <datalist id="urlSuggestions">
+          <option value="https://api.openai.com/v1">
+          <option value="https://api.groq.com/openai/v1">
+          <option value="https://api.deepseek.com/v1">
+          <option value="https://api.mistral.ai/v1">
+          <option value="https://api.together.xyz/v1">
+          <option value="http://localhost:11434/v1">
+          <option value="https://api.anthropic.com">
+          <option value="https://generativelanguage.googleapis.com/v1beta/models">
+        </datalist>
+      </div>
 
-  <label>API Key</label>
-  <input type="password" id="apiKey" placeholder="sk-... (Leave empty for local Ollama)">
+      <div class="form-group">
+        <label for="apiKey">API Key <span id="apiKeyRequired" class="required">*</span></label>
+        <div class="input-wrapper">
+          <input type="password" id="apiKey" placeholder="sk-..." class="modern-input" required>
+          <button type="button" id="copyApiKey" class="action-btn" aria-label="Copy API key" title="Copy to clipboard">
+            <svg class="icon-copy" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </button>
+          <button type="button" id="toggleApiKey" class="toggle-password-btn" aria-label="Toggle API key visibility">
+            <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          </button>
+        </div>
+        <p class="helper-text">Stored securely in your browser only</p>
+      </div>
 
-  <label>Model Name</label>
-  <input type="text" id="modelName" placeholder="gpt-4o-mini">
+      <div class="form-group">
+        <label for="modelName">Model Name <span class="required">*</span></label>
+        <input type="text" id="modelName" list="modelSuggestions" placeholder="gpt-4o-mini" class="modern-input" required>
+        <datalist id="modelSuggestions"></datalist>
+        <p class="helper-text">Select recommended or type custom.</p>
+      </div>
 
-  <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
-  
-  <h3>Transcription Settings</h3>
-  <label>Language</label>
-  <select id="language">
-    <option value="en">English</option><option value="hi">Hindi</option><option value="es">Spanish</option>
-    <option value="fr">French</option><option value="de">German</option><option value="ja">Japanese</option>
-    <option value="ko">Korean</option><option value="zh">Chinese</option><option value="pt">Portuguese</option>
-    <option value="it">Italian</option>
-  </select>
-  
-  <label class="checkbox-label"><input type="checkbox" id="darkMode"> Enable Dark Mode</label>
-  
-  <button id="saveBtn">Save Settings</button>
-  <p id="status" class="status"></p>
+      <div class="form-group">
+        <label for="language">Transcription Lang <span class="required">*</span></label>
+        <select id="language" class="modern-select" required>
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="ja">Japanese</option>
+          <option value="ko">Korean</option>
+          <option value="zh">Chinese</option>
+          <option value="pt">Portuguese</option>
+          <option value="it">Italian</option>
+        </select>
+      </div>
+
+      <hr class="divider full-width">
+      
+      <div class="form-group full-width actions-row">
+        <label class="checkbox-label" for="darkMode">
+          <input type="checkbox" id="darkMode"> 
+          <span>Enable Dark Mode</span>
+        </label>
+        <button type="submit" id="saveBtn" class="save-btn">Save Settings</button>
+      </div>
+
+      <p id="status" class="status full-width"></p>
+    </form>
+  </div>
   <script src="settings.js"></script>
 </body>
 </html>
