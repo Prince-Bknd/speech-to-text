@@ -26,6 +26,7 @@ chrome.storage.local.get(['currentTranscript', 'darkMode']).then((data) => {
   }
 });
 
+// --- Multi-AI Summarise Button Logic ---
 btnSummarize.addEventListener('click', async () => {
   if (!currentText || currentText.trim().length < 50) {
     alert('Not enough text to summarize. Please transcribe a bit more first!');
@@ -33,52 +34,74 @@ btnSummarize.addEventListener('click', async () => {
   }
   
   summaryArea.style.display = 'block';
-  summaryArea.innerHTML = '<span class="summary-loading">🤖 Generating short summary...</span>';
+  summaryArea.innerHTML = '<span class="summary-loading">🤖 AI is thinking...</span>';
   
-  const settings = await chrome.storage.local.get(['apiKey']);
-  const apiKey = settings.apiKey || "..";
+  const settings = await chrome.storage.local.get(['aiProvider', 'apiKey']);
+  const provider = settings.aiProvider || 'openai';
+  const apiKey = settings.apiKey;
   
   if (!apiKey) {
     summaryArea.innerHTML = '<span style="color:red;">❌ API Key not found. Please add it in Settings.</span>';
     return;
   }
 
-  try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini", 
-        messages: [
-          { 
-            role: "system", 
-            content: "Provide a very short, concise, 1 to 2 sentence summary of this transcript. Just state the core message or main takeaway. Do not use bullet points. Keep it under 10-40 words." 
-          },
-          { 
-            role: "user", 
-            content: currentText 
-          }
-        ],
-        max_tokens: 100 
-      })
-    });
+  const systemPrompt = "Provide a very short, concise, 1 to 2 sentence summary of this transcript. Just state the core message or main takeaway. Do not use bullet points. Keep it under 40 words.";
 
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`API Error: ${response.status}`);
+  try {
+    let summaryText = '';
+
+    if (provider === 'openai') {
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: currentText }
+          ],
+          max_tokens: 100
+        })
+      });
+      const data = await res.json();
+      summaryText = data.choices[0].message.content;
+
+    } else if (provider === 'anthropic') {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 
+          'x-api-key': apiKey, 
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json' 
+        },
+        body: JSON.stringify({
+          model: "claude-3-haiku-20240307",
+          max_tokens: 100,
+          system: systemPrompt,
+          messages: [{ role: "user", content: currentText }]
+        })
+      });
+      const data = await res.json();
+      summaryText = data.content[0].text;
+
+    } else if (provider === 'google') {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ parts: [{ text: currentText }] }]
+        })
+      });
+      const data = await res.json();
+      summaryText = data.candidates[0].content.parts[0].text;
     }
 
-    const data = await response.json();
-    const summary = data.choices[0].message.content;
-    
-    summaryArea.innerHTML = `<strong>💡 Quick Summary:</strong><br>${summary}`;
+    summaryArea.innerHTML = `<strong>💡 Quick Summary (${provider.toUpperCase()}):</strong><br>${summaryText}`;
     
   } catch (err) {
     console.error('Summarization error:', err);
-    summaryArea.innerHTML = `<span style="color:red;">❌ Failed to summarize.</span>`;
+    summaryArea.innerHTML = `<span style="color:red;">❌ Failed to summarize. Check your API key.</span>`;
   }
 });
 

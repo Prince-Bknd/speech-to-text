@@ -1,19 +1,34 @@
+const aiProviderSelect = document.getElementById('aiProvider');
 const apiKeyInput = document.getElementById('apiKey');
+const keyHint = document.getElementById('keyHint');
 const langSelect = document.getElementById('language');
 const darkModeInput = document.getElementById('darkMode');
 const saveBtn = document.getElementById('saveBtn');
 const status = document.getElementById('status');
 
-// Load saved settings when the page opens
-chrome.storage.local.get(['apiKey', 'language', 'darkMode']).then((data) => {
+// Update placeholder based on selected AI
+function updateKeyHint() {
+  const provider = aiProviderSelect.value;
+  if (provider === 'openai') keyHint.textContent = 'OpenAI keys start with sk-';
+  if (provider === 'anthropic') keyHint.textContent = 'Anthropic keys start with sk-ant-';
+  if (provider === 'google') keyHint.textContent = 'Google keys start with AIza';
+}
+
+aiProviderSelect.addEventListener('change', updateKeyHint);
+
+// Load saved settings
+chrome.storage.local.get(['aiProvider', 'apiKey', 'language', 'darkMode']).then((data) => {
+  if (data.aiProvider) aiProviderSelect.value = data.aiProvider;
   if (data.apiKey) apiKeyInput.value = data.apiKey;
   if (data.language) langSelect.value = data.language;
   if (data.darkMode) darkModeInput.checked = true;
+  updateKeyHint();
 });
 
-// Save settings when the button is clicked
+// Save settings
 saveBtn.addEventListener('click', () => {
   chrome.storage.local.set({
+    aiProvider: aiProviderSelect.value,
     apiKey: apiKeyInput.value,
     language: langSelect.value,
     darkMode: darkModeInput.checked
@@ -22,33 +37,3 @@ saveBtn.addEventListener('click', () => {
     setTimeout(() => status.textContent = '', 2000);
   });
 });
-
-
-// const langSelect = document.getElementById('language');
-// const darkModeInput = document.getElementById('darkMode');
-// const saveBtn = document.getElementById('saveBtn');
-// const status = document.getElementById('status');
-
-// // Hardcoded API key
-// const HARDCODED_API_KEY = "..";
-
-// // Load saved settings when the page opens
-// chrome.storage.local.get(['apiKey', 'language', 'darkMode']).then((data) => {
-//   if (data.language) langSelect.value = data.language;
-//   if (data.darkMode) darkModeInput.checked = true;
-  
-//   // Always use the hardcoded API key
-//   chrome.storage.local.set({ apiKey: HARDCODED_API_KEY });
-// });
-
-// // Save settings when the button is clicked
-// saveBtn.addEventListener('click', () => {
-//   chrome.storage.local.set({
-//     apiKey: HARDCODED_API_KEY,
-//     language: langSelect.value,
-//     darkMode: darkModeInput.checked
-//   }).then(() => {
-//     status.textContent = 'Settings saved successfully!';
-//     setTimeout(() => status.textContent = '', 2000);
-//   });
-// });

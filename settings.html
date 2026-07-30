@@ -2,21 +2,25 @@
 <html>
 <head>
   <title>Settings</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #f9f9f9; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-    button { margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    .checkbox-label { display: flex; align-items: center; margin-top: 15px; font-weight: normal; }
-    .checkbox-label input { width: auto; margin-right: 10px; }
-  </style>
+  <link rel="stylesheet" href="settings.css">
 </head>
 <body>
   <h1>Settings</h1>
-  <label>OpenAI API Key</label>
-  <input type="password" id="apiKey" placeholder="sk-...">
   
-  <label>Language</label>
+  <label>AI Provider (for Summarization)</label>
+  <select id="aiProvider">
+    <option value="openai">OpenAI (GPT-4o-mini)</option>
+    <option value="anthropic">Anthropic (Claude 3.5 Haiku)</option>
+    <option value="google">Google (Gemini 1.5 Flash)</option>
+  </select>
+
+  <label>API Key</label>
+  <input type="password" id="apiKey" placeholder="sk-...">
+  <p style="font-size: 0.8em; color: #666; margin-top: 5px;">
+    <span id="keyHint">OpenAI keys start with sk-</span>
+  </p>
+
+  <label>Language (for Transcription)</label>
   <select id="language">
     <option value="en">English</option><option value="hi">Hindi</option><option value="es">Spanish</option>
     <option value="fr">French</option><option value="de">German</option><option value="ja">Japanese</option>
@@ -27,7 +31,7 @@
   <label class="checkbox-label"><input type="checkbox" id="darkMode"> Enable Dark Mode</label>
   
   <button id="saveBtn">Save Settings</button>
-  <p id="status" style="color: green;"></p>
-    <script src="settings.js"></script>
+  <p id="status" class="status"></p>
+  <script src="settings.js"></script>
 </body>
 </html>
