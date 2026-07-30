@@ -5,22 +5,41 @@
   <link rel="stylesheet" href="settings.css">
 </head>
 <body>
-  <h1>Settings</h1>
+  <h1>AI Settings</h1>
   
-  <label>AI Provider (for Summarization)</label>
-  <select id="aiProvider">
-    <option value="openai">OpenAI (GPT-4o-mini)</option>
-    <option value="anthropic">Anthropic (Claude 3.5 Haiku)</option>
-    <option value="google">Google (Gemini 1.5 Flash)</option>
+  <label>Quick Preset (Auto-fills fields)</label>
+  <select id="presetSelect">
+    <option value="custom">Custom / Manual</option>
+    <option value="openai">OpenAI (GPT)</option>
+    <option value="groq">Groq (Fast & Free Tier)</option>
+    <option value="deepseek">DeepSeek</option>
+    <option value="mistral">Mistral AI</option>
+    <option value="together">Together AI</option>
+    <option value="ollama">Ollama (Local/Free)</option>
+    <option value="anthropic">Anthropic (Claude)</option>
+    <option value="google">Google (Gemini)</option>
   </select>
 
-  <label>API Key</label>
-  <input type="password" id="apiKey" placeholder="sk-...">
-  <p style="font-size: 0.8em; color: #666; margin-top: 5px;">
-    <span id="keyHint">OpenAI keys start with sk-</span>
-  </p>
+  <label>API Format</label>
+  <select id="apiFormat">
+    <option value="openai">OpenAI Compatible (Works with 90% of AIs)</option>
+    <option value="anthropic">Anthropic (Claude)</option>
+    <option value="google">Google (Gemini)</option>
+  </select>
 
-  <label>Language (for Transcription)</label>
+  <label>Base URL</label>
+  <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+
+  <label>API Key</label>
+  <input type="password" id="apiKey" placeholder="sk-... (Leave empty for local Ollama)">
+
+  <label>Model Name</label>
+  <input type="text" id="modelName" placeholder="gpt-4o-mini">
+
+  <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+  
+  <h3>Transcription Settings</h3>
+  <label>Language</label>
   <select id="language">
     <option value="en">English</option><option value="hi">Hindi</option><option value="es">Spanish</option>
     <option value="fr">French</option><option value="de">German</option><option value="ja">Japanese</option>

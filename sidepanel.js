@@ -26,7 +26,6 @@ chrome.storage.local.get(['currentTranscript', 'darkMode']).then((data) => {
   }
 });
 
-// --- Multi-AI Summarise Button Logic ---
 btnSummarize.addEventListener('click', async () => {
   if (!currentText || currentText.trim().length < 50) {
     alert('Not enough text to summarize. Please transcribe a bit more first!');
@@ -36,11 +35,13 @@ btnSummarize.addEventListener('click', async () => {
   summaryArea.style.display = 'block';
   summaryArea.innerHTML = '<span class="summary-loading">🤖 AI is thinking...</span>';
   
-  const settings = await chrome.storage.local.get(['aiProvider', 'apiKey']);
-  const provider = settings.aiProvider || 'openai';
+  const settings = await chrome.storage.local.get(['apiFormat', 'baseUrl', 'apiKey', 'modelName']);
+  const format = settings.apiFormat || 'openai';
+  const baseUrl = settings.baseUrl || 'https://api.openai.com/v1';
   const apiKey = settings.apiKey;
+  const modelName = settings.modelName || 'gpt-4o-mini';
   
-  if (!apiKey) {
+  if (!apiKey && format !== 'ollama') {
     summaryArea.innerHTML = '<span style="color:red;">❌ API Key not found. Please add it in Settings.</span>';
     return;
   }
@@ -50,12 +51,16 @@ btnSummarize.addEventListener('click', async () => {
   try {
     let summaryText = '';
 
-    if (provider === 'openai') {
-      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    // 1. OPENAI COMPATIBLE (Covers OpenAI, Groq, DeepSeek, Mistral, Ollama, Together, etc.)
+    if (format === 'openai') {
+      const headers = { 'Content-Type': 'application/json' };
+      if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
+
+      const res = await fetch(`${baseUrl}/chat/completions`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        headers: headers,
         body: JSON.stringify({
-          model: "gpt-4o-mini",
+          model: modelName,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: currentText }
@@ -66,8 +71,9 @@ btnSummarize.addEventListener('click', async () => {
       const data = await res.json();
       summaryText = data.choices[0].message.content;
 
-    } else if (provider === 'anthropic') {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // 2. ANTHROPIC (Covers Claude)
+    } else if (format === 'anthropic') {
+      const res = await fetch(`${baseUrl}/v1/messages`, {
         method: 'POST',
         headers: { 
           'x-api-key': apiKey, 
@@ -75,7 +81,7 @@ btnSummarize.addEventListener('click', async () => {
           'content-type': 'application/json' 
         },
         body: JSON.stringify({
-          model: "claude-3-haiku-20240307",
+          model: modelName,
           max_tokens: 100,
           system: systemPrompt,
           messages: [{ role: "user", content: currentText }]
@@ -84,8 +90,9 @@ btnSummarize.addEventListener('click', async () => {
       const data = await res.json();
       summaryText = data.content[0].text;
 
-    } else if (provider === 'google') {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    // 3. GOOGLE (Covers Gemini)
+    } else if (format === 'google') {
+      const res = await fetch(`${baseUrl}/${modelName}:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,14 +104,13 @@ btnSummarize.addEventListener('click', async () => {
       summaryText = data.candidates[0].content.parts[0].text;
     }
 
-    summaryArea.innerHTML = `<strong>💡 Quick Summary (${provider.toUpperCase()}):</strong><br>${summaryText}`;
+    summaryArea.innerHTML = `<strong>💡 Quick Summary (${modelName}):</strong><br>${summaryText}`;
     
   } catch (err) {
     console.error('Summarization error:', err);
-    summaryArea.innerHTML = `<span style="color:red;">❌ Failed to summarize. Check your API key.</span>`;
+    summaryArea.innerHTML = `<span style="color:red;">❌ Failed to summarize. Check your API Key, URL, or Model name.</span>`;
   }
 });
-
 btnStart.addEventListener('click', async () => {
   const response = await chrome.runtime.sendMessage({ type: 'START_TRANSCRIPTION' });
   if (response.success) {
