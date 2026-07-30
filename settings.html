@@ -2,20 +2,43 @@
 <html>
 <head>
   <title>Settings</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #f9f9f9; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-    button { margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    .checkbox-label { display: flex; align-items: center; margin-top: 15px; font-weight: normal; }
-    .checkbox-label input { width: auto; margin-right: 10px; }
-  </style>
+  <link rel="stylesheet" href="settings.css">
 </head>
 <body>
-  <h1>Settings</h1>
-  <label>OpenAI API Key</label>
-  <input type="password" id="apiKey" placeholder="sk-...">
+  <h1>AI Settings</h1>
   
+  <label>Quick Preset (Auto-fills fields)</label>
+  <select id="presetSelect">
+    <option value="custom">Custom / Manual</option>
+    <option value="openai">OpenAI (GPT)</option>
+    <option value="groq">Groq (Fast & Free Tier)</option>
+    <option value="deepseek">DeepSeek</option>
+    <option value="mistral">Mistral AI</option>
+    <option value="together">Together AI</option>
+    <option value="ollama">Ollama (Local/Free)</option>
+    <option value="anthropic">Anthropic (Claude)</option>
+    <option value="google">Google (Gemini)</option>
+  </select>
+
+  <label>API Format</label>
+  <select id="apiFormat">
+    <option value="openai">OpenAI Compatible (Works with 90% of AIs)</option>
+    <option value="anthropic">Anthropic (Claude)</option>
+    <option value="google">Google (Gemini)</option>
+  </select>
+
+  <label>Base URL</label>
+  <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+
+  <label>API Key</label>
+  <input type="password" id="apiKey" placeholder="sk-... (Leave empty for local Ollama)">
+
+  <label>Model Name</label>
+  <input type="text" id="modelName" placeholder="gpt-4o-mini">
+
+  <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+  
+  <h3>Transcription Settings</h3>
   <label>Language</label>
   <select id="language">
     <option value="en">English</option><option value="hi">Hindi</option><option value="es">Spanish</option>
@@ -27,7 +50,7 @@
   <label class="checkbox-label"><input type="checkbox" id="darkMode"> Enable Dark Mode</label>
   
   <button id="saveBtn">Save Settings</button>
-  <p id="status" style="color: green;"></p>
-    <script src="settings.js"></script>
+  <p id="status" class="status"></p>
+  <script src="settings.js"></script>
 </body>
 </html>
