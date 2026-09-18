@@ -2,7 +2,7 @@
 
 **Live Tab Transcriber** is a powerful, privacy-focused Chrome Extension that captures audio directly from your active browser tab and converts it into accurate, real-time text. Unlike standard speech-to-text tools that rely on your microphone, this extension captures the tab's internal audio, ensuring crystal-clear transcription without background noise.
 
-It also features a **Dynamic AI Summarizer**, allowing you to instantly generate concise summaries using OpenAI, Anthropic (Claude), Google (Gemini), Groq, or even your local Ollama instance.
+It also features a **Dynamic AI Summarizer**, allowing you to instantly generate concise summaries using OpenAI, Anthropic (Claude), Google (Gemini), Groq, or even your local Ollama instance. 
 
 ---
 
